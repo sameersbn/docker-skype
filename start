@@ -1,0 +1,39 @@
+#!/bin/bash
+set -e
+
+case "$1" in
+  install)
+    echo "Installing skype..."
+    install -m 0755 /scripts/skype /target/
+    ;;
+  uninstall)
+    echo "Uninstalling browser-box..."
+    rm -rf /target/skype
+    ;;
+  bash)
+    exec $@
+    ;;
+  *)
+    # uid and gid of host user
+    USER_UID=${USER_UID:-1000}
+    USER_GID=${USER_GID:-1000}
+
+    # create user group
+    if ! getent group skype >/dev/null; then
+      groupadd -f -g ${USER_GID} skype >/dev/null 2>&1
+    fi
+
+    # create user with uid and gid matching that of the host user
+    if ! getent passwd skype >/dev/null; then
+      adduser --disabled-login --uid ${USER_UID} --gid ${USER_GID} \
+        --gecos 'Skype' skype >/dev/null 2>&1
+    fi
+
+    # take ownership
+    chown skype:skype -R /home/skype
+
+    # launch application as skype
+    cd /home/skype
+    exec sudo -u skype -H PULSE_SERVER=/run/pulse/native QT_GRAPHICSSYSTEM="native" $@
+    ;;
+esac
