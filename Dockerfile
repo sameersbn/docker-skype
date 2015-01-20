@@ -1,4 +1,4 @@
-FROM sameersbn/ubuntu:14.04.20141218
+FROM sameersbn/ubuntu:14.04.20150120
 
 RUN apt-key adv --keyserver keyserver.ubuntu.com --recv 7212620B \
  && echo "deb http://archive.canonical.com/ trusty partner" >> /etc/apt/sources.list \
