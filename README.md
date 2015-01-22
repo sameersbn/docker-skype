@@ -4,6 +4,7 @@
 - [Contributing](#contributing)
 - [Installation](#installation)
 - [How it works](#how-it-works)
+- [Limitations](#limitations)
 - [Upgrading](#upgrading)
 - [Uninstallation](#uninstallation)
 
