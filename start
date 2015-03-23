@@ -7,7 +7,7 @@ case "$1" in
     install -m 0755 /scripts/skype /target/
     ;;
   uninstall)
-    echo "Uninstalling browser-box..."
+    echo "Uninstalling skype..."
     rm -rf /target/skype
     ;;
   bash)
