@@ -34,6 +34,6 @@ case "$1" in
 
     # launch application as skype
     cd /home/skype
-    exec sudo -u skype -H PULSE_SERVER=/run/pulse/native QT_GRAPHICSSYSTEM="native" $@
+    exec gosu skype PULSE_SERVER=/run/pulse/native QT_GRAPHICSSYSTEM="native" $@
     ;;
 esac
