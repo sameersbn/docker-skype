@@ -10,6 +10,7 @@ if [ -n "${exec}" ]; then
 else
   USER_UID=$(id -u)
   USER_GID=$(id -g)
+  TZ=$(cat /etc/timezone)
   ( id -Gn | grep docker ) || SUDO=sudo
 
   # remove stopped containers
@@ -30,6 +31,7 @@ else
     --env="USER_UID=${USER_UID}" \
     --env="USER_GID=${USER_GID}" \
     --env="DISPLAY=${DISPLAY}" \
+    --env="TZ=${TZ}" \
     --volume=${HOME}/.Skype:/home/skype/.Skype \
     --volume=${HOME}/Downloads:/home/skype/Downloads \
     --volume=/tmp/.X11-unix:/tmp/.X11-unix \
