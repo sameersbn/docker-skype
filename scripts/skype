@@ -26,6 +26,7 @@ else
     fi
   done
 
+  xhost +local:
   echo "Starting ${prog}..."
   ${SUDO} docker run -d \
     --env="USER_UID=${USER_UID}" \
