@@ -10,25 +10,29 @@ if [ -n "${exec}" ]; then
 else
   USER_UID=$(id -u)
   USER_GID=$(id -g)
+  TZ=$(cat /etc/timezone)
+  ( id -Gn | grep docker ) || SUDO=sudo
 
   # remove stopped containers
   echo "Removing stopped containers..."
-  for c in $(docker ps -a -q)
+  for c in $(${SUDO} docker ps -a -q)
   do
-    image="$(docker inspect -f {{.Config.Image}} ${c})"
+    image="$(${SUDO} docker inspect -f {{.Config.Image}} ${c})"
     if [ "${image}" == "sameersbn/skype:latest" ]; then
-      running=$(docker inspect -f {{.State.Running}} ${c})
+      running=$(${SUDO} docker inspect -f {{.State.Running}} ${c})
       if [ "${running}" != "true" ]; then
-        docker rm "${c}" >/dev/null
+        ${SUDO} docker rm "${c}" >/dev/null
       fi
     fi
   done
 
+  xhost +local:
   echo "Starting ${prog}..."
-  docker run -d \
+  ${SUDO} docker run -d \
     --env="USER_UID=${USER_UID}" \
     --env="USER_GID=${USER_GID}" \
     --env="DISPLAY=${DISPLAY}" \
+    --env="TZ=${TZ}" \
     --volume=${HOME}/.Skype:/home/skype/.Skype \
     --volume=${HOME}/Downloads:/home/skype/Downloads \
     --volume=/tmp/.X11-unix:/tmp/.X11-unix \
