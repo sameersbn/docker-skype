@@ -1,5 +1,21 @@
 all: build
 
+XSOCK=/tmp/.X11-unix
+XAUTH=/tmp/.docker.xauth
+
+ENV_VARS = \
+	--env="USER_UID=$(shell id -u)" \
+	--env="USER_GID=$(shell id -g)" \
+	--env="DISPLAY=${DISPLAY}" \
+	--env="XAUTHORITY=${XAUTH}"
+
+VOLUMES = \
+	--volume=$(HOME)/.Skype:/home/skype/.Skype \
+	--volume=$(HOME)/Downloads:/home/skype/Downloads \
+	--volume=${XSOCK}:${XSOCK} \
+	--volume=${XAUTH}:${XAUTH} \
+	--volume=/run/user/$(shell id -u)/pulse:/run/pulse
+
 help:
 	@echo ""
 	@echo "-- Help Menu"
@@ -20,11 +36,6 @@ install uninstall: build
 
 skype bash:
 	@docker run -it --rm \
-		--env="USER_UID=$(shell id -u)" \
-		--env="USER_GID=$(shell id -g)" \
-		--env="DISPLAY=${DISPLAY}" \
-		--volume=$(HOME)/.Skype:/home/skype/.Skype \
-		--volume=$(HOME)/Downloads:/home/skype/Downloads \
-		--volume=/tmp/.X11-unix:/tmp/.X11-unix \
-		--volume=/run/user/$(shell id -u)/pulse:/run/pulse \
+		${ENV_VARS} \
+		${VOLUMES} \
 		${USER}/skype:latest $@
