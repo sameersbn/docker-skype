@@ -36,6 +36,7 @@ else
   ENV_VARS+=" --env=USER_UID=${USER_UID}"
   ENV_VARS+=" --env=USER_GID=${USER_GID}"
   ENV_VARS+=" --env=DISPLAY"
+  ENV_VARS+=" --env=XAUTHORITY=${XAUTH}"
   ENV_VARS+=" --env=TZ=${TZ}"
 
   # collect volumes arguments
