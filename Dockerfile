@@ -7,8 +7,8 @@ RUN apt-key adv --keyserver keyserver.ubuntu.com --recv 7212620B \
  && apt-get install -y pulseaudio:i386 skype:i386 \
  && rm -rf /var/lib/apt/lists/*
 
-ADD scripts /scripts
-ADD start /start
+COPY scripts /scripts
+COPY start /start
 RUN chmod 755 /start
 
 ENTRYPOINT ["/start"]
