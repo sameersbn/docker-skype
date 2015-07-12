@@ -5,7 +5,7 @@ RUN apt-key adv --keyserver keyserver.ubuntu.com --recv 7212620B \
  && dpkg --add-architecture i386 \
  && apt-get update \
  && apt-get install -y pulseaudio:i386 skype:i386 \
- && rm -rf /var/lib/apt/lists/* # 20150712
+ && rm -rf /var/lib/apt/lists/*
 
 ADD scripts /scripts
 ADD start /start
