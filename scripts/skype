@@ -1,11 +1,6 @@
 #!/bin/bash
 
 PATH=/usr/sbin:/usr/bin:/sbin:/bin
-if [ "$SKYPE_STARTER" == "true" ]; then
-   echo "No Skype found!!!!"
-   exit 2
-fi
-export SKYPE_STARTER=true
 
 prog=$(basename $0)
 exec=$(which $prog)
