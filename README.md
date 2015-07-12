@@ -10,7 +10,7 @@
 
 # Introduction
 
-Dockerized skype with voice call support via pulseaudio and does not required any complicated setup.
+Dockerized skype with voice and video call support and does not required any complicated setup.
 
 The image does require pulseaudio for audio support which is installed on all major linux distributions out of the box.
 
@@ -48,7 +48,6 @@ This makes sure that your profile details are stored on the host and files recei
 
 # Limitations
 
-- Video calls do not work
 - Minimize to system tray does not work.
 
 # Upgrading
