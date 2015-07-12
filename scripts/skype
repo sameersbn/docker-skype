@@ -26,6 +26,18 @@ else
     fi
   done
 
+  # collect environment variables
+  ENV_VARS+=" --env=USER_UID=${USER_UID}"
+  ENV_VARS+=" --env=USER_GID=${USER_GID}"
+  ENV_VARS+=" --env=DISPLAY"
+  ENV_VARS+=" --env=TZ=${TZ}"
+
+  # collect volumes arguments
+  VOLUMES+=" --volume=${HOME}/.Skype:/home/skype/.Skype"
+  VOLUMES+=" --volume=${HOME}/Downloads:/home/skype/Downloads"
+  VOLUMES+=" --volume=/tmp/.X11-unix:/tmp/.X11-unix"
+  VOLUMES+=" --volume=/run/user/${USER_UID}/pulse:/run/pulse"
+
   # enumerate video devices for webcam support
   VIDEO_DEVICES=
   for device in /dev/video*
@@ -38,14 +50,8 @@ else
   xhost +local:
   echo "Starting ${prog}..."
   ${SUDO} docker run -d \
-    --env="USER_UID=${USER_UID}" \
-    --env="USER_GID=${USER_GID}" \
-    --env="DISPLAY=${DISPLAY}" \
-    --env="TZ=${TZ}" \
+    ${ENV_VARS} \
     ${VIDEO_DEVICES} \
-    --volume=${HOME}/.Skype:/home/skype/.Skype \
-    --volume=${HOME}/Downloads:/home/skype/Downloads \
-    --volume=/tmp/.X11-unix:/tmp/.X11-unix \
-    --volume=/run/user/${USER_UID}/pulse:/run/pulse \
+    ${VOLUMES} \
     sameersbn/skype:latest $(basename $0) $@ >/dev/null
 fi
