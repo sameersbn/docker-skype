@@ -10,7 +10,13 @@ if [ -n "${exec}" ]; then
 else
   USER_UID=$(id -u)
   USER_GID=$(id -g)
+
   TZ=$(cat /etc/timezone)
+
+  XSOCK=/tmp/.X11-unix
+  XAUTH=/tmp/.docker.xauth
+  xauth nlist :0 | sed -e 's/^..../ffff/' | xauth -f ${XAUTH} nmerge -
+
   ( id -Gn | grep docker ) || SUDO=sudo
 
   # remove stopped containers
@@ -35,7 +41,8 @@ else
   # collect volumes arguments
   VOLUMES+=" --volume=${HOME}/.Skype:/home/skype/.Skype"
   VOLUMES+=" --volume=${HOME}/Downloads:/home/skype/Downloads"
-  VOLUMES+=" --volume=/tmp/.X11-unix:/tmp/.X11-unix"
+  VOLUMES+=" --volume=${XSOCK}:${XSOCK}"
+  VOLUMES+=" --volume=${XAUTH}:${XAUTH}"
   VOLUMES+=" --volume=/run/user/${USER_UID}/pulse:/run/pulse"
 
   # enumerate video devices for webcam support
@@ -49,6 +56,7 @@ else
 
   xhost +local:
   echo "Starting ${prog}..."
+  touch ${XAUTH}
   ${SUDO} docker run -d \
     ${ENV_VARS} \
     ${VIDEO_DEVICES} \
