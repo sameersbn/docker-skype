@@ -17,13 +17,6 @@ case "$1" in
     # uid and gid of host user
     USER_UID=${USER_UID:-1000}
     USER_GID=${USER_GID:-1000}
-    for f in /dev/video*; do
-      test -c "$f" || continue
-      gid=`stat -c %g "$f"`
-      test -z "$gid" -o "$gid" -eq 0 && continue
-      USER_GID=$gid
-      echo Setting user-gid based on $f
-    done
 
     # create user group
     if ! getent group skype >/dev/null; then
@@ -34,6 +27,19 @@ case "$1" in
     if ! getent passwd skype >/dev/null; then
       adduser --disabled-login --uid ${USER_UID} --gid ${USER_GID} \
         --gecos 'Skype' skype >/dev/null 2>&1
+    fi
+
+    # grant access to video devices
+    for device in /dev/video*
+    do
+      if [[ -c $device ]]; then
+        VIDEO_GID=$(stat -c %g $device)
+        break
+      fi
+    done
+
+    if [[ -n $VIDEO_GID ]]; then
+      usermod -a -G $VIDEO_GID skype
     fi
 
     # take ownership
