@@ -10,7 +10,7 @@ RUN apt-key adv --keyserver keyserver.ubuntu.com --recv 7212620B \
  && rm -rf /var/lib/apt/lists/*
 
 COPY scripts /scripts
-COPY entrypoint.sh /entrypoint.sh
-RUN chmod 755 /entrypoint.sh
+COPY entrypoint.sh /sbin/entrypoint.sh
+RUN chmod 755 /sbin/entrypoint.sh
 
-ENTRYPOINT ["/entrypoint.sh"]
+ENTRYPOINT ["/sbin/entrypoint.sh"]
