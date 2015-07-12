@@ -1,6 +1,6 @@
 #!/bin/bash
 
-PATH=/usr/sbin:/usr/bin:/sbin:/bin:/usr/local/sbin:/usr/local/bin
+PATH=/usr/sbin:/usr/bin:/sbin:/bin
 if [ "$SKYPE_STARTER" == "true" ]; then
    echo "No Skype found!!!!"
    exit 2
