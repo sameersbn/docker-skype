@@ -1,6 +1,11 @@
 #!/bin/bash
 
-PATH=/usr/sbin:/usr/bin:/sbin:/bin
+PATH=/usr/sbin:/usr/bin:/sbin:/bin:/usr/local/sbin:/usr/local/bin
+if [ "$SKYPE_STARTER" == "true" ]; then
+   echo "No Skype found!!!!"
+   exit 2
+fi
+export SKYPE_STARTER=true
 
 prog=$(basename $0)
 exec=$(which $prog)
@@ -25,6 +30,11 @@ else
       fi
     fi
   done
+  video=""
+  for f in /dev/video*; do
+    test -c $f &&
+      video="$video --device=$f:$f:rwm"
+  done
 
   xhost +local:
   echo "Starting ${prog}..."
@@ -33,6 +43,7 @@ else
     --env="USER_GID=${USER_GID}" \
     --env="DISPLAY=${DISPLAY}" \
     --env="TZ=${TZ}" \
+    $video \
     --volume=${HOME}/.Skype:/home/skype/.Skype \
     --volume=${HOME}/Downloads:/home/skype/Downloads \
     --volume=/tmp/.X11-unix:/tmp/.X11-unix \
