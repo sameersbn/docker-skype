@@ -10,10 +10,7 @@ case "$1" in
     echo "Uninstalling skype..."
     rm -rf /target/skype
     ;;
-  bash)
-    exec $@
-    ;;
-  *)
+  skype)
     # uid and gid of host user
     USER_UID=${USER_UID:-1000}
     USER_GID=${USER_GID:-1000}
@@ -48,5 +45,8 @@ case "$1" in
     # launch application as ${SKYPE_USER}
     cd /home/${SKYPE_USER}
     exec sudo -u ${SKYPE_USER} -H PULSE_SERVER=/run/pulse/native QT_GRAPHICSSYSTEM="native" $@
+    ;;
+  *)
+    exec $@
     ;;
 esac
