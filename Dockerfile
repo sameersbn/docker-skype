@@ -1,5 +1,7 @@
 FROM sameersbn/ubuntu:14.04.20150712
 
+ENV SKYPE_USER=skype
+
 RUN apt-key adv --keyserver keyserver.ubuntu.com --recv 7212620B \
  && echo "deb http://archive.canonical.com/ trusty partner" >> /etc/apt/sources.list \
  && dpkg --add-architecture i386 \

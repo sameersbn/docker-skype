@@ -19,14 +19,14 @@ case "$1" in
     USER_GID=${USER_GID:-1000}
 
     # create user group
-    if ! getent group skype >/dev/null; then
-      groupadd -f -g ${USER_GID} skype >/dev/null 2>&1
+    if ! getent group ${SKYPE_USER} >/dev/null; then
+      groupadd -f -g ${USER_GID} ${SKYPE_USER} >/dev/null 2>&1
     fi
 
     # create user with uid and gid matching that of the host user
-    if ! getent passwd skype >/dev/null; then
+    if ! getent passwd ${SKYPE_USER} >/dev/null; then
       adduser --disabled-login --uid ${USER_UID} --gid ${USER_GID} \
-        --gecos 'Skype' skype >/dev/null 2>&1
+        --gecos 'Skype' ${SKYPE_USER} >/dev/null 2>&1
     fi
 
     # grant access to video devices
@@ -39,14 +39,14 @@ case "$1" in
     done
 
     if [[ -n $VIDEO_GID ]]; then
-      usermod -a -G $VIDEO_GID skype
+      usermod -a -G $VIDEO_GID ${SKYPE_USER}
     fi
 
     # take ownership
-    chown skype:skype -R /home/skype
+    chown ${SKYPE_USER}:${SKYPE_USER} -R /home/${SKYPE_USER}
 
-    # launch application as skype
-    cd /home/skype
-    exec sudo -u skype -H PULSE_SERVER=/run/pulse/native QT_GRAPHICSSYSTEM="native" $@
+    # launch application as ${SKYPE_USER}
+    cd /home/${SKYPE_USER}
+    exec sudo -u ${SKYPE_USER} -H PULSE_SERVER=/run/pulse/native QT_GRAPHICSSYSTEM="native" $@
     ;;
 esac

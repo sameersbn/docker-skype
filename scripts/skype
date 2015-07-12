@@ -1,6 +1,7 @@
 #!/bin/bash
 
 PATH=/usr/sbin:/usr/bin:/sbin:/bin
+SKYPE_USER=skype
 
 prog=$(basename $0)
 exec=$(which $prog)
@@ -40,8 +41,8 @@ else
   ENV_VARS+=" --env=TZ=${TZ}"
 
   # collect volumes arguments
-  VOLUMES+=" --volume=${HOME}/.Skype:/home/skype/.Skype"
-  VOLUMES+=" --volume=${HOME}/Downloads:/home/skype/Downloads"
+  VOLUMES+=" --volume=${HOME}/.Skype:/home/${SKYPE_USER}/.Skype"
+  VOLUMES+=" --volume=${HOME}/Downloads:/home/${SKYPE_USER}/Downloads"
   VOLUMES+=" --volume=${XSOCK}:${XSOCK}"
   VOLUMES+=" --volume=${XAUTH}:${XAUTH}"
   VOLUMES+=" --volume=/run/user/${USER_UID}/pulse:/run/pulse"
