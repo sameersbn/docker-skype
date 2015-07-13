@@ -56,7 +56,6 @@ else
     fi
   done
 
-  xhost +local:
   echo "Starting ${prog}..."
   touch ${XAUTH}
   ${SUDO} docker run -d \
