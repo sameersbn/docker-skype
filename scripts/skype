@@ -63,5 +63,5 @@ else
     ${ENV_VARS} \
     ${VIDEO_DEVICES} \
     ${VOLUMES} \
-    sameersbn/skype:latest $(basename $0) $@ >/dev/null
+    sameersbn/skype:latest ${prog} $@ >/dev/null
 fi
