@@ -5,11 +5,15 @@ USER_UID=${USER_UID:-1000}
 USER_GID=${USER_GID:-1000}
 
 install_skype() {
+  echo "Installing skype-wrapper..."
+  install -m 0755 /var/cache/skype/skype-wrapper /target/
   echo "Installing skype..."
-  install -m 0755 /var/cache/skype/skype /target/
+  ln -sf skype-wrapper /target/skype
 }
 
 uninstall_skype() {
+  echo "Uninstalling skype-wrapper..."
+  rm -rf /target/skype-wrapper
   echo "Uninstalling skype..."
   rm -rf /target/skype
 }
