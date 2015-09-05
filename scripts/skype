@@ -3,25 +3,17 @@
 PATH=/usr/sbin:/usr/bin:/sbin:/bin
 SKYPE_USER=skype
 
-prog=$(basename $0)
-exec=$(which $prog)
+# do we need to use sudo to start docker containers?
+( id -Gn | grep -q docker ) || SUDO=sudo
 
-if [ -n "${exec}" ]; then
-  exec ${exec} $@
-else
-  USER_UID=$(id -u)
-  USER_GID=$(id -g)
+USER_UID=$(id -u)
+USER_GID=$(id -g)
 
-  TZ=$(cat /etc/timezone)
+XSOCK=/tmp/.X11-unix
+XAUTH=/tmp/.docker.xauth
 
-  XSOCK=/tmp/.X11-unix
-  XAUTH=/tmp/.docker.xauth
-  xauth nlist :0 | sed -e 's/^..../ffff/' | xauth -f ${XAUTH} nmerge -
-
-  ( id -Gn | grep docker ) || SUDO=sudo
-
-  # remove stopped containers
-  echo "Removing stopped containers..."
+cleanup_stopped_skype_instances(){
+  echo "Cleaning up stopped skype instances..."
   for c in $(${SUDO} docker ps -a -q)
   do
     image="$(${SUDO} docker inspect -f {{.Config.Image}} ${c})"
@@ -32,21 +24,28 @@ else
       fi
     fi
   done
+}
 
-  # collect environment variables
+prepare_docker_env_parameters() {
   ENV_VARS+=" --env=USER_UID=${USER_UID}"
   ENV_VARS+=" --env=USER_GID=${USER_GID}"
   ENV_VARS+=" --env=DISPLAY"
   ENV_VARS+=" --env=XAUTHORITY=${XAUTH}"
-  ENV_VARS+=" --env=TZ=${TZ}"
+  ENV_VARS+=" --env=TZ=$(cat /etc/timezone)"
+}
 
-  # collect volumes arguments
+prepare_docker_volume_parameters() {
+  touch ${XAUTH}
+  xauth nlist :0 | sed -e 's/^..../ffff/' | xauth -f ${XAUTH} nmerge -
+
   VOLUMES+=" --volume=${HOME}/.Skype:/home/${SKYPE_USER}/.Skype"
   VOLUMES+=" --volume=${HOME}/Downloads:/home/${SKYPE_USER}/Downloads"
   VOLUMES+=" --volume=${XSOCK}:${XSOCK}"
   VOLUMES+=" --volume=${XAUTH}:${XAUTH}"
   VOLUMES+=" --volume=/run/user/${USER_UID}/pulse:/run/pulse"
+}
 
+prepare_docker_device_parameters() {
   # enumerate video devices for webcam support
   VIDEO_DEVICES=
   for device in /dev/video*
@@ -55,12 +54,23 @@ else
       VIDEO_DEVICES="${VIDEO_DEVICES} --device $device:$device"
     fi
   done
+}
 
-  echo "Starting ${prog}..."
-  touch ${XAUTH}
-  ${SUDO} docker run -d \
-    ${ENV_VARS} \
-    ${VIDEO_DEVICES} \
-    ${VOLUMES} \
-    sameersbn/skype:latest ${prog} $@ >/dev/null
+prog=$(basename $0)
+exec=$(which $prog)
+
+if [ -n "${exec}" ]; then
+  exec ${exec} $@
 fi
+
+cleanup_stopped_skype_instances
+prepare_docker_env_parameters
+prepare_docker_volume_parameters
+prepare_docker_device_parameters
+
+echo "Starting ${prog}..."
+${SUDO} docker run -d \
+  ${ENV_VARS} \
+  ${VIDEO_DEVICES} \
+  ${VOLUMES} \
+  sameersbn/skype:latest ${prog} $@ >/dev/null
