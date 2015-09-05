@@ -12,6 +12,15 @@ USER_GID=$(id -g)
 XSOCK=/tmp/.X11-unix
 XAUTH=/tmp/.docker.xauth
 
+list_commands() {
+  echo ""
+  echo "Launch skype using:"
+  echo "  skype                     OR "
+  echo "  skype-wrapper skype"
+  echo ""
+  exit 1
+}
+
 cleanup_stopped_skype_instances(){
   echo "Cleaning up stopped skype instances..."
   for c in $(${SUDO} docker ps -a -q)
@@ -59,7 +68,19 @@ prepare_docker_device_parameters() {
 prog=$(basename $0)
 exec=$(which $prog)
 
-if [ -n "${exec}" ]; then
+if [[ ${prog} == "skype-wrapper" ]]; then
+  case ${1} in
+    skype)
+      prog=${1}
+      shift
+      ;;
+    *|help)
+      list_commands
+      exit 1
+      ;;
+  esac
+elif [[ -n ${exec} ]]; then
+  # launch host binary if it exists
   exec ${exec} $@
 fi
 
