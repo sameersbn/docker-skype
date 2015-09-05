@@ -9,7 +9,7 @@ RUN apt-key adv --keyserver keyserver.ubuntu.com --recv 7212620B \
  && apt-get install -y pulseaudio:i386 skype:i386 \
  && rm -rf /var/lib/apt/lists/*
 
-COPY scripts /scripts
+COPY scripts/ /var/cache/skype/
 COPY entrypoint.sh /sbin/entrypoint.sh
 RUN chmod 755 /sbin/entrypoint.sh
 

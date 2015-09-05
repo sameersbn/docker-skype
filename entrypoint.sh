@@ -4,7 +4,7 @@ set -e
 case "$1" in
   install)
     echo "Installing skype..."
-    install -m 0755 /scripts/skype /target/
+    install -m 0755 /var/cache/skype/skype /target/
     ;;
   uninstall)
     echo "Uninstalling skype..."
