@@ -1,4 +1,4 @@
-FROM sameersbn/ubuntu:14.04.20150825
+FROM quay.io/sameersbn/ubuntu:14.04.20151011
 
 ENV SKYPE_USER=skype
 
