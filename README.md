@@ -1,4 +1,4 @@
-# Table of Contents
+[![Docker Repository on Quay.io](https://quay.io/repository/sameersbn/skype/status "Docker Repository on Quay.io")](https://quay.io/repository/sameersbn/skype)
 
 # quay.io/sameersbn/skype:latest
 
