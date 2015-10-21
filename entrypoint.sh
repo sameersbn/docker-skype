@@ -37,13 +37,15 @@ grant_access_to_video_devices() {
   do
     if [[ -c $device ]]; then
       VIDEO_GID=$(stat -c %g $device)
+      VIDEO_GROUP=$(stat -c %G $device)
+      if [[ ${VIDEO_GROUP} == "UNKNOWN" ]]; then
+        VIDEO_GROUP=video
+        groupadd -g ${VIDEO_GID} ${VIDEO_GROUP}
+      fi
+      usermod -a -G ${VIDEO_GROUP} ${SKYPE_USER}
       break
     fi
   done
-
-  if [[ -n $VIDEO_GID ]]; then
-    usermod -a -G $VIDEO_GID ${SKYPE_USER}
-  fi
 }
 
 launch_skype() {
