@@ -26,7 +26,7 @@ cleanup_stopped_skype_instances(){
   for c in $(${SUDO} docker ps -a -q)
   do
     image="$(${SUDO} docker inspect -f {{.Config.Image}} ${c})"
-    if [ "${image}" == "quay.io/sameersbn/skype:latest" ]; then
+    if [ "${image}" == "sameersbn/skype:latest" ]; then
       running=$(${SUDO} docker inspect -f {{.State.Running}} ${c})
       if [ "${running}" != "true" ]; then
         ${SUDO} docker rm "${c}" >/dev/null
@@ -94,4 +94,4 @@ ${SUDO} docker run -d \
   ${ENV_VARS} \
   ${VIDEO_DEVICES} \
   ${VOLUMES} \
-  quay.io/sameersbn/skype:latest ${prog} $@ >/dev/null
+  sameersbn/skype:latest ${prog} $@ >/dev/null

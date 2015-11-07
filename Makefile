@@ -27,15 +27,15 @@ help:
 	@echo ""
 
 build:
-	@docker build --tag=quay.io/sameersbn/skype .
+	@docker build --tag=sameersbn/skype .
 
 install uninstall: build
 	@docker run -it --rm \
 		--volume=/usr/local/bin:/target \
-		quay.io/sameersbn/skype:latest $@
+		sameersbn/skype:latest $@
 
 skype bash:
 	@docker run -it --rm \
 		${ENV_VARS} \
 		${VOLUMES} \
-		quay.io/sameersbn/skype:latest $@
+		sameersbn/skype:latest $@
