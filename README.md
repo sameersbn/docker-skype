@@ -55,9 +55,7 @@ docker pull sameersbn/skype:latest
 Alternatively you can build the image yourself.
 
 ```bash
-git clone https://github.com/sameersbn/docker-skype.git
-cd docker-skype
-docker build --tag $USER/skype .
+docker build -t sameersbn/skype github.com/sameersbn/docker-skype
 ```
 
 With the image locally available, install the wrapper scripts using:
