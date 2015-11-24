@@ -79,9 +79,9 @@ The wrapper scripts volume mount the X11 and pulseaudio sockets in the launcher 
 When the image is launched the following directories are mounted as volumes
 
  - `${HOME}/.Skype`
- - `${HOME}/Downloads`
+ - `XDG_DOWNLOAD_DIR` or if it is missing `${HOME}/Downloads`
 
-This makes sure that your profile details are stored on the host and files received via Skype are available on your host in the `Downloads` directory.
+This makes sure that your profile details are stored on the host and files received via Skype are available on your host in the appropriate download directory.
 
 ## Limitations
 
