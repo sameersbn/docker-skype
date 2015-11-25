@@ -12,6 +12,11 @@ USER_GID=$(id -g)
 XSOCK=/tmp/.X11-unix
 XAUTH=/tmp/.docker.xauth
 
+DOWNLOAD_DIR=$(xdg-user-dir DOWNLOAD)
+if [ -z "${DOWNLOAD_DIR}" ]; then
+    DOWNLOAD_DIR="${HOME}/Downloads"
+fi;
+
 list_commands() {
   echo ""
   echo "Launch skype using:"
@@ -48,7 +53,7 @@ prepare_docker_volume_parameters() {
   xauth nlist :0 | sed -e 's/^..../ffff/' | xauth -f ${XAUTH} nmerge -
 
   VOLUMES+=" --volume=${HOME}/.Skype:/home/${SKYPE_USER}/.Skype"
-  VOLUMES+=" --volume=${HOME}/Downloads:/home/${SKYPE_USER}/Downloads"
+  VOLUMES+=" --volume=${DOWNLOAD_DIR}:/home/${SKYPE_USER}/Downloads"
   VOLUMES+=" --volume=${XSOCK}:${XSOCK}"
   VOLUMES+=" --volume=${XAUTH}:${XAUTH}"
   VOLUMES+=" --volume=/run/user/${USER_UID}/pulse:/run/pulse"
