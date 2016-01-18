@@ -32,6 +32,16 @@ create_user() {
   chown ${SKYPE_USER}:${SKYPE_USER} -R /home/${SKYPE_USER}
 }
 
+configure_user() {
+  # small fix to have much better fonts
+  mkdir /home/${SKYPE_USER}/.config
+  cat > /home/${SKYPE_USER}/.config/Trolltech.conf << EOF
+[Qt]
+font="Cantarell,11,-1,5,50,0,0,0,0,0"
+EOF
+  chown ${SKYPE_USER}:${SKYPE_USER} /home/${SKYPE_USER}/.config/Trolltech.conf
+}
+
 grant_access_to_video_devices() {
   for device in /dev/video*
   do
@@ -62,6 +72,7 @@ case "$1" in
     ;;
   skype)
     create_user
+    configure_user
     grant_access_to_video_devices
     launch_skype $@
     ;;
