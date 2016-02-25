@@ -33,9 +33,10 @@ cleanup_stopped_skype_instances(){
     image="$(${SUDO} docker inspect -f {{.Config.Image}} ${c})"
     if [ "${image}" == "sameersbn/skype:latest" ]; then
       running=$(${SUDO} docker inspect -f {{.State.Running}} ${c})
-      if [ "${running}" != "true" ]; then
-        ${SUDO} docker rm "${c}" >/dev/null
+      if [ "${running}" = "true" ]; then
+        ${SUDO} docker stop "${c}" >/dev/null
       fi
+      ${SUDO} docker rm "${c}" >/dev/null
     fi
   done
 }
