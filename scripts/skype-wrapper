@@ -47,6 +47,11 @@ prepare_docker_env_parameters() {
   ENV_VARS+=" --env=DISPLAY"
   ENV_VARS+=" --env=XAUTHORITY=${XAUTH}"
   ENV_VARS+=" --env=TZ=$(date +%Z)"
+  if [ -f /etc/timezone ]; then
+    ENV_VARS+=" --env=TZ_=$(cat /etc/timezone)"
+  else
+    ENV_VARS+=" --env=TZ_=$( readlink -e /etc/localtime | sed -E 's|.*/([^/][^/]*/[^/][^/]*)|\1|' )"
+  fi
 }
 
 prepare_docker_volume_parameters() {
