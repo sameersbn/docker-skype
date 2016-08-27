@@ -1,4 +1,4 @@
-FROM sameersbn/ubuntu:14.04.20160817
+FROM sameersbn/ubuntu:14.04.20160827
 
 ENV SKYPE_USER=skype
 
