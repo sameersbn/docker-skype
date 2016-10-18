@@ -20,24 +20,28 @@ fi;
 list_commands() {
   echo ""
   echo "Launch skype using:"
-  echo "  skype                     OR "
-  echo "  skype-wrapper skype"
+  echo "  skype [profile-name]                 OR "
+  echo "  skype-wrapper skype [profile-name]"
+  echo ""
+  echo "profile-name allows for multiple skype instances. if no profile-name"
+  echo "is specified, a default profile will be created/used"
   echo ""
   exit 1
 }
 
 cleanup_stopped_skype_instances(){
   echo "Cleaning up stopped skype instances..."
-  for c in $(${SUDO} docker ps -a -q)
-  do
-    image="$(${SUDO} docker inspect -f {{.Config.Image}} ${c})"
-    if [ "${image}" == "sameersbn/skype:latest" ]; then
-      running=$(${SUDO} docker inspect -f {{.State.Running}} ${c})
-      if [ "${running}" = "true" ]; then
-        ${SUDO} docker stop "${c}" >/dev/null
-      fi
-      ${SUDO} docker rm "${c}" >/dev/null
-    fi
+  CMD=( ${SUDO} docker ps
+    --all --quiet
+    # remove the exited containers only
+    # this allows for multiple containers
+    # for different profiles
+    --filter=status=exited
+    --filter=ancestor=sameersbn/skype
+  )
+  # echo CMD: ${CMD[@]}
+  for c in $( ${CMD[@]} ); do
+    ${DOCKER[@]} rm "${c}" >/dev/null
   done
 }
 
@@ -47,17 +51,35 @@ prepare_docker_env_parameters() {
   ENV_VARS+=" --env=DISPLAY"
   ENV_VARS+=" --env=XAUTHORITY=${XAUTH}"
   ENV_VARS+=" --env=TZ=$(date +%Z)"
+  if [ -f /etc/timezone ]; then
+    ENV_VARS+=" --env=TZ_=$(cat /etc/timezone)"
+  else
+    ENV_VARS+=" --env=TZ_=$( readlink -e /etc/localtime | sed -E 's|.*/([^/][^/]*/[^/][^/]*)|\1|' )"
+  fi
 }
 
 prepare_docker_volume_parameters() {
   touch ${XAUTH}
   xauth nlist :0 | sed -e 's/^..../ffff/' | xauth -f ${XAUTH} nmerge -
-
-  VOLUMES+=" --volume=${HOME}/.Skype:/home/${SKYPE_USER}/.Skype"
+  
   VOLUMES+=" --volume=${DOWNLOAD_DIR}:/home/${SKYPE_USER}/Downloads"
   VOLUMES+=" --volume=${XSOCK}:${XSOCK}"
   VOLUMES+=" --volume=${XAUTH}:${XAUTH}"
   VOLUMES+=" --volume=/run/user/${USER_UID}/pulse:/run/pulse"
+
+  # assume defualt profile
+  PROFILE=default
+  
+  # use specified profile
+  [ -n "$1" ] && PROFILE=$1 && shift
+  echo using skype profile $PROFILE
+
+  PROFILE="${HOME}/.skype/${PROFILE}"
+
+  # create the profile directory if it doesn't exist
+  [ ! -d "${PROFILE}" ] && mkdir -p ${PROFILE}
+
+  VOLUMES+=" --volume=${PROFILE}:/home/${SKYPE_USER}/.Skype"
 }
 
 prepare_docker_device_parameters() {
