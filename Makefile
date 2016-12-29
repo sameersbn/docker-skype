@@ -27,15 +27,15 @@ help:
 	@echo ""
 
 build:
-	@docker build --tag=sameersbn/skype .
+	@docker build --tag=sameersbn/skype:$(shell cat VERSION) .
 
 install uninstall: build
 	@docker run -it --rm \
 		--volume=/usr/local/bin:/target \
-		sameersbn/skype:latest $@
+		sameersbn/skype:$(shell cat VERSION) $@
 
 skype bash:
 	@docker run -it --rm \
 		${ENV_VARS} \
 		${VOLUMES} \
-		sameersbn/skype:latest $@
+		sameersbn/skype:$(shell cat VERSION) $@

@@ -100,4 +100,4 @@ ${SUDO} docker run -d \
   ${ENV_VARS} \
   ${VIDEO_DEVICES} \
   ${VOLUMES} \
-  sameersbn/skype:latest ${prog} $@ >/dev/null
+  sameersbn/skype:1.0.0 ${prog} $@ >/dev/null
