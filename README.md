@@ -1,6 +1,6 @@
 [![Docker Repository on Quay.io](https://quay.io/repository/sameersbn/skype/status "Docker Repository on Quay.io")](https://quay.io/repository/sameersbn/skype)
 
-# sameersbn/skype:1.0.1-1
+# sameersbn/skype:1.0.1-2
 
 - [Introduction](#introduction)
   - [Contributing](#contributing)
@@ -49,7 +49,7 @@ Automated builds of the image are available on [Dockerhub](https://hub.docker.co
 > **Note**: Builds are also available on [Quay.io](https://quay.io/repository/sameersbn/skype)
 
 ```bash
-docker pull sameersbn/skype:1.0.1-1
+docker pull sameersbn/skype:1.0.1-2
 ```
 
 Alternatively you can build the image yourself.
@@ -63,7 +63,7 @@ With the image locally available, install the wrapper scripts using:
 ```bash
 docker run -it --rm \
   --volume /usr/local/bin:/target \
-  sameersbn/skype:1.0.1-1 install
+  sameersbn/skype:1.0.1-2 install
 ```
 
 This will install a wrapper script to launch `skype`.
@@ -96,7 +96,7 @@ To upgrade to newer releases:
   1. Download the updated Docker image:
 
   ```bash
-  docker pull sameersbn/skype:1.0.1-1
+  docker pull sameersbn/skype:1.0.1-2
   ```
 
   2. Run `install` to make sure the host scripts are updated.
@@ -104,7 +104,7 @@ To upgrade to newer releases:
   ```bash
   docker run -it --rm \
     --volume /usr/local/bin:/target \
-    sameersbn/skype:1.0.1-1 install
+    sameersbn/skype:1.0.1-2 install
   ```
 
 ## Uninstallation
@@ -112,7 +112,7 @@ To upgrade to newer releases:
 ```bash
 docker run -it --rm \
   --volume /usr/local/bin:/target \
-  sameersbn/skype:1.0.1-1 uninstall
+  sameersbn/skype:1.0.1-2 uninstall
 ```
 
 ## Shell Access
