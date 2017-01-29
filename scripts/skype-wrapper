@@ -31,7 +31,7 @@ cleanup_stopped_skype_instances(){
   for c in $(${SUDO} docker ps -a -q)
   do
     image="$(${SUDO} docker inspect -f {{.Config.Image}} ${c})"
-    if [ "${image}" == "sameersbn/skype:1.0.1-2" ]; then
+    if [ "${image}" == "sameersbn/skype:1.0.1-3" ]; then
       running=$(${SUDO} docker inspect -f {{.State.Running}} ${c})
       if [ "${running}" = "true" ]; then
         ${SUDO} docker stop "${c}" >/dev/null
@@ -100,4 +100,4 @@ ${SUDO} docker run -d \
   ${ENV_VARS} \
   ${VIDEO_DEVICES} \
   ${VOLUMES} \
-  sameersbn/skype:1.0.1-2 ${prog} $@ >/dev/null
+  sameersbn/skype:1.0.1-3 ${prog} $@ >/dev/null
