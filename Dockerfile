@@ -1,5 +1,10 @@
 FROM sameersbn/ubuntu:14.04.20170123
 
+RUN locale-gen en_US.UTF-8  
+ENV LANG en_US.UTF-8  
+ENV LANGUAGE en_US:en  
+ENV LC_ALL en_US.UTF-8  
+
 ENV SKYPE_USER=skype
 
 RUN apt-key adv --keyserver keyserver.ubuntu.com --recv 7212620B \
