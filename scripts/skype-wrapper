@@ -46,7 +46,7 @@ prepare_docker_env_parameters() {
   ENV_VARS+=" --env=USER_GID=${USER_GID}"
   ENV_VARS+=" --env=DISPLAY"
   ENV_VARS+=" --env=XAUTHORITY=${XAUTH}"
-  ENV_VARS+=" --env=TZ=$(date +%Z)"
+  [[ -L /etc/localtime && -e /etc/localtime  ]] && ENV_VARS+=" --env=TZ=$(readlink /etc/localtime | sed 's/..\/usr\/share\/zoneinfo\///')" || ENV_VARS+=" --env=TZ=$(date +%Z)"
 }
 
 prepare_docker_volume_parameters() {
